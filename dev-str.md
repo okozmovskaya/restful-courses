@@ -5,14 +5,20 @@
 _As a user I want to_
 
 Assigned to `Olga`
-______
+
+---
 
 ## 2. User story : GET
 
-_As a user I want to_
+_As a user I want to get a list of all pets_
+
+- [ ] Branch used `get`
+- [ ] Json
+- [ ] Express
 
 Assigned to `Anna`
-______
+
+---
 
 ## 3. User story : POST
 
@@ -20,7 +26,7 @@ _As a user I want to_
 
 Assigned to `Oguz`
 
-______
+---
 
 ## 4. User story : PUT
 
@@ -28,7 +34,7 @@ _As a user I want to_
 
 Assigned to `Abel`
 
-______
+---
 
 ## 5. User story : DELETE
 
@@ -36,7 +42,7 @@ _As a user I want to_
 
 Assigned to `Olga`
 
-______
+---
 
 ## 6. User story : DEPLOYMENT URL
 
