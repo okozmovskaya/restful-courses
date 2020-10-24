@@ -4,16 +4,14 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
-
-
-// I use this package to read data from the body
 app.use(bodyParser.json());
 
 // reading dB
 const data = fs.readFileSync('./pets.json');
 const dB = JSON.parse(data);
 
-// adding data
+// POST - Adding data
+
 app.post("/api", (req, res) => {
     
     const schema = Joi.object({
@@ -50,8 +48,34 @@ app.post("/api", (req, res) => {
     res.send(pet);
 });
 
-// Testing the dB (delete when finished)
-//console.log(dB);
+// GET - Reading data
+/**
+ * This is a creation of a get method
+ * @method
+ * @param {url} path - The url path to define a route
+ * @param {function} callback - A route handler with request and response params 
+ */
+app.get('/', (req, res) => {
+    // request obj info on incoming requests
+    res.send('Hello Pets!!!');
+});
+
+// define another route to get list of pets from the database
+app.get('/api', (req, res) => {
+    res.send(dB); // Q*Convert json objects to js obj*
+}); 
+
+// Implement route to get a single pet
+app.get('/api/:id', (req, res) => {
+    // Look up the pet with a given id & get a single pet using id
+    const pet = dB.find(c => c.id === parseInt(req.params.id));
+    // If pet doesn't exist return 404: Not Found
+    if (!pet) return res.status(404).send('The pet was not found');
+    // Return the pet to the client
+    res.send(pet);
+});
+
+// PUT - Updating data
 
 app.put('/api/:id', (req, res) => {
     const pet = dB.find(p => p.id === parseInt(req.params.id));
@@ -106,8 +130,24 @@ app.put('/api/:id', (req, res) => {
     res.send(pet);
 });
 
+// DELETE - Deleting data
 
-// Server
+app.delete("/api/:id", (req, res) => {
+    // Look up the pet
+    // Not existing, return 404
+    let pet = dB.find(p => p.id === parseInt(req.params.id));
+    if (!pet) res.status(404).send("The pet with the given ID was not found.");
+    res.send(pet);
 
+    // Delete
+    const index = dB.indexOf(pet);
+    dB.splice(index, 1);
+
+    // Return the same pet
+    res.send(pet);
+});
+
+
+// Server: listening on a given port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
