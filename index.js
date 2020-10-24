@@ -33,7 +33,7 @@ app.post("/api", (req, res) => {
     if(result.error) return res.status(400).send(result.error.details[0].message);
 
     const pet = {
-        id: dB.length + 1,
+        id: dB[dB.length-1].id + 1,
         name: req.body.name,
         img: req.body.img,
         type: req.body.type,
