@@ -5,14 +5,15 @@ const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-
-// I use this package to read data from the body
+// use this package to read data from the body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
 
 // reading dB
 const data = fs.readFileSync('./pets.json');
 const dB = JSON.parse(data);
+
+// POST
 
 // adding data
 app.post("/api", (req, res) => {
@@ -54,6 +55,24 @@ app.post("/api", (req, res) => {
 // Testing the dB (delete when finished)
 console.log(dB);
 
+
+// DELETE
+app.delete("/api/dB/:id", (req, res) => {
+    // Look up the pet
+    // Not existing, return 404
+    let pet = dB.find(c => c.id === parseInt(req.params.id));
+    if (!pet) res.status(404).send("The pet with the given ID was not found.");
+    res.send(pet);
+
+    // Delete
+    const index = dB.indexOf(pet);
+    dB.splice(index, 1);
+
+    // Return the same pet
+    res.send(pet);
+});
+
+
 // Server
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`))
+app.listen(port, () => console.log(`Listening on port ${port}...`));
