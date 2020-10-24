@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
 
 // reading dB
@@ -146,7 +147,6 @@ app.delete("/api/:id", (req, res) => {
     // Return the same pet
     res.send(pet);
 });
-
 
 // Server: listening on a given port
 const port = process.env.PORT || 3000;
