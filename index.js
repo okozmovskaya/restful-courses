@@ -5,22 +5,14 @@ const app = express();
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-// use this package to read data from the body
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended : true }));
-
-// JSON (Q *Where was this used*)
-const packageJson = require("pkg.json");
-app.use(express.json()); // parsing of JSON object in the body of the request
-
 
 // reading dB
 const data = fs.readFileSync('./pets.json');
 const dB = JSON.parse(data);
 
-// POST
+// POST - Adding data
 
-// adding data
 app.post("/api", (req, res) => {
     
     const schema = Joi.object({
@@ -41,7 +33,7 @@ app.post("/api", (req, res) => {
     if(result.error) return res.status(400).send(result.error.details[0].message);
 
     const pet = {
-        id: dB.length + 1,
+        id: dB[dB.length-1].id + 1,
         name: req.body.name,
         img: req.body.img,
         type: req.body.type,
@@ -57,28 +49,7 @@ app.post("/api", (req, res) => {
     res.send(pet);
 });
 
-// Testing the dB (delete when finished)
-console.log(dB);
-
-
-// DELETE
-app.delete("/api/dB/:id", (req, res) => {
-    // Look up the pet
-    // Not existing, return 404
-    let pet = dB.find(c => c.id === parseInt(req.params.id));
-    if (!pet) res.status(404).send("The pet with the given ID was not found.");
-    res.send(pet);
-
-    // Delete
-    const index = dB.indexOf(pet);
-    dB.splice(index, 1);
-
-    // Return the same pet
-    res.send(pet);
-});
-
-
-// Server
+// GET - Reading data
 /**
  * This is a creation of a get method
  * @method
@@ -91,17 +62,89 @@ app.get('/', (req, res) => {
 });
 
 // define another route to get list of pets from the database
-app.get('/api/pets', (req, res) => {
+app.get('/api', (req, res) => {
     res.send(dB); // Q*Convert json objects to js obj*
 }); 
 
 // Implement route to get a single pet
-app.get('/api/pets/:id', (req, res) => {
+app.get('/api/:id', (req, res) => {
     // Look up the pet with a given id & get a single pet using id
     const pet = dB.find(c => c.id === parseInt(req.params.id));
     // If pet doesn't exist return 404: Not Found
     if (!pet) return res.status(404).send('The pet was not found');
     // Return the pet to the client
+    res.send(pet);
+});
+
+// PUT - Updating data
+
+app.put('/api/:id', (req, res) => {
+    const pet = dB.find(p => p.id === parseInt(req.params.id));
+    if (!pet) res.status(404).send('Sorry, the pet was not found!');
+    
+    const schema = Joi.object({
+        name: Joi.string().min(3),
+        img: Joi.string(),
+        type: Joi.string().min(3),
+        breed: Joi.string().min(3),
+        description: Joi.string(),
+        age: Joi.string(),
+        inoculations: Joi.array().items(Joi.string()),
+        diseases: Joi.array().items(Joi.string()),
+        parasites: Joi.array().items(Joi.string())
+    });
+    
+    const result = schema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    
+    if(req.body.name) {
+        pet.name = req.body.name;
+    }
+    if(req.body.img) {
+        pet.img = req.body.img;
+    }
+    if(req.body.type) {
+        pet.type = req.body.type;
+    }
+    if(req.body.breed) {
+        pet.breed = req.body.breed;
+    }
+    if(req.body.description) {
+        pet.description = req.body.description;
+    }
+    if(req.body.age) {
+        pet.age = req.body.age;
+    }
+    if(req.body.inoculations) {
+        pet.inoculations = [...req.body.inoculations];
+    }
+    if(req.body.diseases) {
+        pet.diseases = [...req.body.diseases];
+    }
+    if(req.body.parasites) {
+        pet.parasites = [...req.body.parasites];
+    }
+    
+    res.send(pet);
+});
+
+// DELETE - Deleting data
+
+app.delete("/api/:id", (req, res) => {
+    // Look up the pet
+    // Not existing, return 404
+    let pet = dB.find(p => p.id === parseInt(req.params.id));
+    if (!pet) res.status(404).send("The pet with the given ID was not found.");
+    res.send(pet);
+
+    // Delete
+    const index = dB.indexOf(pet);
+    dB.splice(index, 1);
+
+    // Return the same pet
     res.send(pet);
 });
 
