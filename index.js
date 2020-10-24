@@ -54,6 +54,27 @@ app.post("/api", (req, res) => {
 // Testing the dB (delete when finished)
 console.log(dB);
 
+app.put('/api/pets/:id', (req, res) => {
+    const pet = dB.find(p => p.id === parseInt(req.params.id));
+    if (!pet) res.status(404).send('Sorry, the pet was not found!');
+
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+
+    const result = Joi.Validate(req.body, schema);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+
+    pet.name = req.body.name;
+    res.send(pet);
+
+});
+
+
 // Server
+
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`))
+app.listen(port, () => console.log(`Listening on port ${port}...`));
