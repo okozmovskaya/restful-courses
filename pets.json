@@ -36,7 +36,7 @@
       "parasites": ["none"]
     },
     {
-      "id": 3,
+      "id": 4,
       "name": "Scarlett",
       "img": "",
       "type": "Dog",
@@ -48,7 +48,7 @@
       "parasites": ["none"]
     },
     {
-      "id": 4,
+      "id": 5,
       "name": "Katrine",
       "img": "",
       "type": "Cat",
@@ -60,7 +60,7 @@
       "parasites": ["none"]
     },
     {
-      "id": 5,
+      "id": 6,
       "name": "Timmy",
       "img": "",
       "type": "Cat",
@@ -72,7 +72,7 @@
       "parasites": ["none"]
     },
     {
-      "id": 6,
+      "id": 7,
       "name": "Freddie",
       "img": "",
       "type": "Cat",
@@ -84,7 +84,7 @@
       "parasites": ["none"]
     },
     {
-      "id": 7,
+      "id": 8,
       "name": "Charly",
       "img": "",
       "type": "Dog",
