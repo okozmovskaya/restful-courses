@@ -13,8 +13,7 @@ Assigned to `Olga`
 _As a user I want to get a list of all pets_
 
 - [ ] Branch used `get`
-- [ ] Json
-- [ ] Express
+- [ ] Create get method
 
 Assigned to `Anna`
 

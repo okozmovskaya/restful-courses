@@ -4,6 +4,11 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
+// JSON (Q *Where was this used*)
+const packageJson = require("pkg.json");
+app.use(express.json()); // parsing of JSON object in the body of the request
+
+
 // reading dB
 const data = fs.readFileSync('./pets.json');
 const dB = JSON.parse(data);
@@ -11,69 +16,32 @@ const dB = JSON.parse(data);
 // Testing the dB (delete when finished)
 console.log(dB);
 
-// Server
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`))
-
-
-const pets = [{
-        id: 1,
-        name: 'cat'
-    },
-    {
-        id: 2,
-        name: 'dog'
-    },
-    {
-        id: 3,
-        name: 'horse'
-    }
-];
-/*
- * get method
- * @param path/url & callback function (a route handler) with request and response params 
+/**
+ * This is a creation of a get method
+ * @method
+ * @param {url} path - The url path to define a route
+ * @param {function} callback - A route handler with request and response params 
  */
-
-// Create a get method
-// Define a route 
 app.get('/', (req, res) => {
     // request obj info on incoming requests
-    res.send('Pets World');
+    res.send('Hello Pets!!!');
 });
 
 // define another route to get list of pets from the database
 app.get('/api/pets', (req, res) => {
-    res.send(pets);
-});
+    res.send(dB); // Q*Convert json objects to js obj*
+}); 
 
 // Implement route to get a single pet
 app.get('/api/pets/:id', (req, res) => {
-    //send to client
-    const pet = pets.find(c => c.id === parseInt(req.params.id));
-    if (!pet) {
-        res.status(404).send('This pet was not found');
-    };
+    // Look up the pet with a given id & get a single pet using id
+    const pet = dB.find(c => c.id === parseInt(req.params.id));
+    // If pet doesn't exist return 404: Not Found
+    if (!pet) return res.status(404).send('The pet was not found');
+    // Return the pet to the client
     res.send(pet);
-
 });
 
-// multiple parameters
-// app.get('/api/pets/:year/:month', (req, res) => {
-//     res.send(req.params); //send to client
-// });
-
-// Optional query parameters
-// app.get('/api/pets/:year/:month', (req, res) => {
-//     res.send(req.query); //send to client
-// });
-
-// listen on a given port
-
-// PORT
+// Server: listening on a given port
 const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-    console.log(`Listening to PORT ${port} ...`)
-});
-
-// NB: read objects in js from json
+app.listen(port, () => console.log(`Listening on port ${port}...`))
